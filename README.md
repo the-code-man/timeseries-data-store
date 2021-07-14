@@ -4,4 +4,4 @@ A very simple timeseries data storage system which performs some simple aggregat
 
 ## Data Flow
 
-![Alt text](/assets/system.PNG "System Architecture")
+![Data Flow](https://github.com/the-code-man/timeseries-data-store/blob/main/assets/system.png)
