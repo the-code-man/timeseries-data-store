@@ -1,0 +1,337 @@
+{
+	"info": {
+		"_postman_id": "1434c64c-51a3-4a80-8b29-710cd15ffeb1",
+		"name": "TimeSeries Data Store",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create new Sources",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    \"FQREW\",\r\n    \"TESTR\",\r\n    \"RAKER\"\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{host}}:{{hostPort}}/api/timeseries/v1/WriteData",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{hostPort}}",
+					"path": [
+						"api",
+						"timeseries",
+						"v1",
+						"WriteData"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Timeseries Data",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    {\r\n        \"Time\": \"2021-06-29T05:13:14\",\r\n        \"Values\": [1,2,3]\r\n    },\r\n    {\r\n        \"Time\": \"2021-06-29T05:14:14\",\r\n        \"Values\": [4,5,6]\r\n    },\r\n    {\r\n        \"Time\": \"2021-06-29T05:15:14\",\r\n        \"Values\": [7,8,9]\r\n    },\r\n    {\r\n        \"Time\": \"2021-06-29T05:16:14\",\r\n        \"Values\": [10,11,12]\r\n    },\r\n    {\r\n        \"Time\": \"2021-06-29T05:17:14\",\r\n        \"Values\": [12,14,15]\r\n    }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{host}}:{{hostPort}}/api/timeseries/v2/WriteData/{{dataSource}}",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{hostPort}}",
+					"path": [
+						"api",
+						"timeseries",
+						"v2",
+						"WriteData",
+						"{{dataSource}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Sources",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{host}}:{{hostPort}}/api/timeseries/ReadData",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{hostPort}}",
+					"path": [
+						"api",
+						"timeseries",
+						"ReadData"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Raw Data",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{host}}:{{hostPort}}/api/timeseries/ReadData/{{dataSource}}/historic?from={{startDate}}&to={{endDate}}",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{hostPort}}",
+					"path": [
+						"api",
+						"timeseries",
+						"ReadData",
+						"{{dataSource}}",
+						"historic"
+					],
+					"query": [
+						{
+							"key": "from",
+							"value": "{{startDate}}"
+						},
+						{
+							"key": "to",
+							"value": "{{endDate}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Latest Raw Data",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{host}}:{{hostPort}}/api/timeseries/ReadData/{{dataSource}}/getlatest",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{hostPort}}",
+					"path": [
+						"api",
+						"timeseries",
+						"ReadData",
+						"{{dataSource}}",
+						"getlatest"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Avg Data",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{host}}:{{hostPort}}/api/timeseries/AggregatedData/{{dataSource}}/historic?from={{startDate}}&to={{endDate}}",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{hostPort}}",
+					"path": [
+						"api",
+						"timeseries",
+						"AggregatedData",
+						"{{dataSource}}",
+						"historic"
+					],
+					"query": [
+						{
+							"key": "from",
+							"value": "{{startDate}}"
+						},
+						{
+							"key": "to",
+							"value": "{{endDate}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Latest Average",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{host}}:{{hostPort}}/api/timeseries/AggregatedData/{{dataSource}}/getlatest",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{hostPort}}",
+					"path": [
+						"api",
+						"timeseries",
+						"AggregatedData",
+						"{{dataSource}}",
+						"getlatest"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Max Data",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{host}}:{{hostPort}}/api/timeseries/AggregatedData/{{dataSource}}/historic?from={{startDate}}&to={{endDate}}&aggregationType=max",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{hostPort}}",
+					"path": [
+						"api",
+						"timeseries",
+						"AggregatedData",
+						"{{dataSource}}",
+						"historic"
+					],
+					"query": [
+						{
+							"key": "from",
+							"value": "{{startDate}}"
+						},
+						{
+							"key": "to",
+							"value": "{{endDate}}"
+						},
+						{
+							"key": "aggregationType",
+							"value": "max"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Latest Max",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{host}}:{{hostPort}}/api/timeseries/AggregatedData/{{dataSource}}/getlatest?aggregationType=max",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{hostPort}}",
+					"path": [
+						"api",
+						"timeseries",
+						"AggregatedData",
+						"{{dataSource}}",
+						"getlatest"
+					],
+					"query": [
+						{
+							"key": "aggregationType",
+							"value": "max"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Min Data",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{host}}:{{hostPort}}/api/timeseries/AggregatedData/{{dataSource}}/historic?from={{startDate}}&to={{endDate}}&aggregationType=min",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{hostPort}}",
+					"path": [
+						"api",
+						"timeseries",
+						"AggregatedData",
+						"{{dataSource}}",
+						"historic"
+					],
+					"query": [
+						{
+							"key": "from",
+							"value": "{{startDate}}"
+						},
+						{
+							"key": "to",
+							"value": "{{endDate}}"
+						},
+						{
+							"key": "aggregationType",
+							"value": "min"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Latest Min",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{host}}:{{hostPort}}/api/timeseries/AggregatedData/{{dataSource}}/getlatest?aggregationType=min",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{hostPort}}",
+					"path": [
+						"api",
+						"timeseries",
+						"AggregatedData",
+						"{{dataSource}}",
+						"getlatest"
+					],
+					"query": [
+						{
+							"key": "aggregationType",
+							"value": "min"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
