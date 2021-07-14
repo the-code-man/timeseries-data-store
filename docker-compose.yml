@@ -1,0 +1,112 @@
+version: "3.9"
+
+services:
+  dataingestor:
+    container_name: dataingestor
+    image: codeman8182/timeseries-datastore/data-ingestor
+    build:
+      context: .
+      dockerfile: src/DataIngestor/Dockerfile
+    restart: on-failure
+    volumes:
+      - ${DATA_AGGREGATOR_DBS_ROOT}:/db
+    environment:
+      - DataStoreSettings__Type=${DATABASE_TYPE}
+      - DataStoreSettings__ConnectionString=/db/timeseries.db
+      - MessageBusSettings__Host=${BUS_HOST}
+      - MessageBusSettings__UserName=${BUS_USERNAME}
+      - MessageBusSettings__Password=${BUS_PASSWORD}
+    networks:
+      - timeseries-datastore-net
+
+  avg-calculator:
+    container_name: avgcalculator
+    image: codeman8182/timeseries-datastore/avg-calculator
+    build:
+      context: .
+      dockerfile: src/TimeSeries.Calculator.Avg/Dockerfile
+    restart: on-failure
+    volumes:
+      - ${DATA_AGGREGATOR_DBS_ROOT}:/db
+    environment:
+      - DataStoreSettings__Type=${DATABASE_TYPE}
+      - DataStoreSettings__ConnectionString=/db/timeseries-avg.db
+      - MessageBusSettings__Host=${BUS_HOST}
+      - MessageBusSettings__UserName=${BUS_USERNAME}
+      - MessageBusSettings__Password=${BUS_PASSWORD}
+    networks:
+      - timeseries-datastore-net
+
+  min-calculator:
+    container_name: mincalculator
+    image: codeman8182/timeseries-datastore/min-calculator
+    build:
+      context: .
+      dockerfile: src/TimeSeries.Calculator.Min/Dockerfile
+    restart: on-failure
+    volumes:
+      - ${DATA_AGGREGATOR_DBS_ROOT}:/db
+    environment:
+      - DataStoreSettings__Type=${DATABASE_TYPE}
+      - DataStoreSettings__ConnectionString=/db/timeseries-min.db
+      - MessageBusSettings__Host=${BUS_HOST}
+      - MessageBusSettings__UserName=${BUS_USERNAME}
+      - MessageBusSettings__Password=${BUS_PASSWORD}
+    networks:
+      - timeseries-datastore-net
+
+  max-calculator:
+    container_name: maxcalculator
+    image: codeman8182/timeseries-datastore/max-calculator
+    build:
+      context: .
+      dockerfile: src/TimeSeries.Calculator.Max/Dockerfile
+    restart: on-failure
+    volumes:
+      - ${DATA_AGGREGATOR_DBS_ROOT}:/db
+    environment:
+      - DataStoreSettings__Type=${DATABASE_TYPE}
+      - DataStoreSettings__ConnectionString=/db/timeseries-max.db
+      - MessageBusSettings__Host=${BUS_HOST}
+      - MessageBusSettings__UserName=${BUS_USERNAME}
+      - MessageBusSettings__Password=${BUS_PASSWORD}
+    networks:
+      - timeseries-datastore-net
+  
+  dataggregator-api:
+    container_name: dataggregatorapi
+    image: codeman8182/timeseries-datastore/api
+    build:
+      context: .
+      dockerfile: src/TimeSeries.Api/Dockerfile
+    restart: on-failure
+    ports:
+      - "8080:443"
+    volumes:
+      - ${DATA_AGGREGATOR_DBS_ROOT}:/db
+      - ${CERT_ROOT}:/https/:ro
+    environment:
+      - ASPNETCORE_URLS=https://+
+      - ASPNETCORE_HTTPS_PORT=8080
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/TimeSeries.Api.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - DataStoreSettings__Type=${DATABASE_TYPE}
+      - DataStoreSettings__ConnectionString=/db/timeseries.db
+      - MessageBusSettings__Host=${BUS_HOST}
+      - MessageBusSettings__UserName=${BUS_USERNAME}
+      - MessageBusSettings__Password=${BUS_PASSWORD}
+      - ServiceSettings__AvgCalculatorSvcUri=http://mincalculator 
+      - ServiceSettings__MaxCalculatorSvcUri=http://maxcalculator
+      - ServiceSettings__MinCalculatorSvcUri=http://avgcalculator
+    networks:
+      - timeseries-datastore-net
+    depends_on:
+      - avg-calculator
+      - min-calculator
+      - max-calculator
+      - dataingestor
+
+networks:
+  timeseries-datastore-net:
+    name: timeseries-datastore-net
+    driver: bridge

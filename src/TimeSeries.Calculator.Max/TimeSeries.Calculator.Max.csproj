@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+		<UserSecretsId>b61a57d0-5bec-47f5-bed4-38ae6614231b</UserSecretsId>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<DockerfileContext>..\..</DockerfileContext>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Protobuf Include="Protos\calculator-max-reader.proto" GrpcServices="Server" />
+	</ItemGroup>
+
+	<ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0" />
+    <PackageReference Include="MassTransit" Version="7.2.1" />
+    <PackageReference Include="MassTransit.Autofac" Version="7.2.1" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="7.2.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.14" />
+    <PackageReference Include="Serilog.Extensions.Logging.File" Version="2.0.0" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\core\TimeSeries.gRPC.Server\TimeSeries.gRPC.Server.csproj" />
+		<ProjectReference Include="..\..\core\TimeSeries.DataStore.Aggr\TimeSeries.DataStore.Aggr.csproj" />
+		<ProjectReference Include="..\..\core\TimeSeries.ServiceBus.Common\TimeSeries.ServiceBus.Common.csproj" />
+		<ProjectReference Include="..\..\core\TimeSeries.Shared.Contracts\TimeSeries.Shared.Contracts.csproj" />
+	</ItemGroup>
+
+</Project>

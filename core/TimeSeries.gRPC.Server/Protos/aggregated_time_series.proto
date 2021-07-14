@@ -1,0 +1,37 @@
+syntax = "proto3";
+package Calculator;
+option csharp_namespace = "TimeSeries.gRPC.Server";
+
+import "google/protobuf/timestamp.proto";
+
+service AggregatedTimeSeriesService {
+  rpc GetHistoric (GetHistoricRequest) returns (GetHistoricResponse);
+  rpc GetLatest (GetLatestRequest) returns (GetLatestResponse);
+}
+
+message AggregatedTimeSeries {
+  google.protobuf.Timestamp time = 1;
+  double value = 2;
+}
+
+message GetLatestRequest {
+  string time_series_source_id = 1;
+}
+
+message GetLatestResponse {
+  bool success = 1;
+  AggregatedTimeSeries time_series_data = 2;
+  string error_message = 3;
+}
+
+message GetHistoricRequest {
+  string time_series_source_id = 1;
+  google.protobuf.Timestamp from = 2;
+  google.protobuf.Timestamp to = 3;
+}
+
+message GetHistoricResponse {
+  bool success = 1;
+  repeated AggregatedTimeSeries time_series_data = 2;
+  string error_message = 3;
+}
