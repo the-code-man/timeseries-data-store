@@ -6,7 +6,7 @@ services:
     image: codeman8182/timeseries-datastore/data-ingestor
     build:
       context: .
-      dockerfile: src/DataIngestor/Dockerfile
+      dockerfile: src/TimeSeries.DataIngestor/Dockerfile
     restart: on-failure
     volumes:
       - ${DATA_AGGREGATOR_DBS_ROOT}:/db
