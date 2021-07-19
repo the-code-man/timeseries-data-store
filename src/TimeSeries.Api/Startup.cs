@@ -37,7 +37,10 @@ namespace TimeSeries.Api
                 v.ReportApiVersions = true;
             });
 
-            services.AddSignalR();
+            services.AddSignalR(options =>
+            {
+                options.EnableDetailedErrors = true;
+            });
 
             services.AddAppConfiguration<ServiceSettings>(Configuration.GetSection(nameof(ServiceSettings)));
             services.AddAppConfiguration<MessageBusSettings>(Configuration.GetSection(nameof(MessageBusSettings)));
@@ -45,8 +48,8 @@ namespace TimeSeries.Api
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Data aggregator API v1", Version = "1.0" });
-                c.SwaggerDoc("v2", new OpenApiInfo { Title = "Data aggregator API v2", Version = "2.0" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Timeseries data store API v1", Version = "1.0" });
+                c.SwaggerDoc("v2", new OpenApiInfo { Title = "Timeseries data store API v2", Version = "2.0" });
                 c.ResolveConflictingActions(a => a.First());
             });
         }
@@ -67,8 +70,8 @@ namespace TimeSeries.Api
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Data aggregator API v1"));
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v2/swagger.json", "Data aggregator API v2"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Timeseries data store API v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v2/swagger.json", "Timeseries data store API v2"));
             }
 
             app.UseHttpsRedirection();
@@ -77,7 +80,7 @@ namespace TimeSeries.Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<NotificationHub>("/notificationHub");
+                endpoints.MapHub<RealtimeDataHub>($"/{nameof(RealtimeDataHub)}");
             });
 
             appLifetime.ApplicationStarted.Register(bus.Start);

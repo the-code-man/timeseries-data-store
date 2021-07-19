@@ -26,14 +26,14 @@ namespace TimeSeries.Api.Controllers
         private readonly IWriteSource<string> _sourceWriter;
         private readonly IMapper _mapper;
         private readonly IProducer _messageBus;
-        private readonly IHubContext<NotificationHub> _hubContext;
+        private readonly IHubContext<RealtimeDataHub> _hubContext;
 
         public WriteDataController(ILogger<WriteDataController> logger,
             IWriteData<Entities.RawTimeSeries> dataWriter,
             IWriteSource<string> sourceWriter,
             IMapper mapper,
             IProducer messageBus,
-            IHubContext<NotificationHub> hubContext)
+            IHubContext<RealtimeDataHub> hubContext)
         {
             _dataWriter = dataWriter;
             _sourceWriter = sourceWriter;
