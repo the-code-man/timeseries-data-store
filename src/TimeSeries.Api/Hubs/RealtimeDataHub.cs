@@ -2,21 +2,18 @@
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using TimeSeries.Shared.Contracts.Services;
 
 namespace TimeSeries.Api.Hubs
 {
     public class RealtimeDataHub : Hub<IRealtimeDataClient>
     {
         private readonly ILogger<RealtimeDataHub> _logger;
-        private readonly ConcurrentDictionary<string, ClientConnection> _subscriptions;
+        private static readonly ConcurrentDictionary<string, ClientConnection> _subscriptions = new();
 
         public RealtimeDataHub(ILogger<RealtimeDataHub> logger)
         {
             _logger = logger;
-            _subscriptions = new ConcurrentDictionary<string, ClientConnection>();
         }
 
         public async Task Subscribe(Subscription[] subscriptions)

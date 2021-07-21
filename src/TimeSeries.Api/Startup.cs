@@ -28,6 +28,12 @@ namespace TimeSeries.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(o => o.AddPolicy("AllowAllOrigins", builder => builder
+            .WithOrigins("http://localhost:4200")
+            .AllowCredentials()
+            .AllowAnyHeader()
+            .AllowAnyMethod()));
+
             services.AddControllers().AddJsonOptions(c => c.JsonSerializerOptions.PropertyNamingPolicy = null);
 
             services.AddApiVersioning(v =>
@@ -76,11 +82,13 @@ namespace TimeSeries.Api
 
             app.UseHttpsRedirection();
             app.UseRouting();
+            app.UseCors("AllowAllOrigins");
             app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<RealtimeDataHub>($"/{nameof(RealtimeDataHub)}");
+                endpoints.MapHub<RealtimeDataHub>($"/realtime");
             });
 
             appLifetime.ApplicationStarted.Register(bus.Start);

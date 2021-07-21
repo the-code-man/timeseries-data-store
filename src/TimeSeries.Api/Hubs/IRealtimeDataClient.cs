@@ -6,8 +6,6 @@ namespace TimeSeries.Api.Hubs
 {
     public interface IRealtimeDataClient
     {
-        Task OnProcessed(RawTimeSeries[] rawTimeSeries);
-
         Task OnProcessed(AggregatedTimeSeries[] aggregatedTimeSeries, AggregationType aggregationType);
     }
 }
