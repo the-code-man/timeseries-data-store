@@ -7,7 +7,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using TimeSeries.Shared.Contracts.DataStore;
 using TimeSeries.Shared.Contracts.Entities;
+using TimeSeries.Shared.Contracts.Services;
 using ApiContracts = TimeSeries.Shared.Contracts.Api;
+using System.Linq;
 
 namespace TimeSeries.Api.Controllers
 {
@@ -26,13 +28,26 @@ namespace TimeSeries.Api.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
+        [HttpGet("sources")]
         public async Task<IActionResult> Get(CancellationToken token)
         {
             var svcResponse = await _sourceReader.GetAllSources(token);
             var apiResponse = _mapper.Map<ApiContracts.ReadResponse<List<string>>>(svcResponse);
 
             return Ok(apiResponse);
+        }
+
+        [HttpGet("aggregationtypes")]
+        public async Task<IActionResult> GetAggregationTypes(CancellationToken token)
+        {
+            var response = await Task.FromResult(new ApiContracts.ReadResponse<string[]>
+            {
+                Data = Enum.GetValues<AggregationType>().Select(a => a.ToString()).ToArray(),
+                IsSuccess = true,
+                ErrorMessage = string.Empty
+            });
+
+            return Ok(response);
         }
 
         [HttpGet("{sourceId}/historic")]
