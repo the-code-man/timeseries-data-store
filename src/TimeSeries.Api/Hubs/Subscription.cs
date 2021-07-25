@@ -6,6 +6,6 @@ namespace TimeSeries.Api.Hubs
     {
         public string Source { get; set; }
 
-        public AggregationType AggregationType { get; set; }
+        public string AggregationType { get; set; }
     }
 }

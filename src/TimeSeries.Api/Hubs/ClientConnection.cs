@@ -1,5 +1,7 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Threading.Tasks;
+using TimeSeries.Shared.Contracts.Services;
 
 namespace TimeSeries.Api.Hubs
 {
@@ -25,7 +27,10 @@ namespace TimeSeries.Api.Hubs
                     _subscriptions.TryAdd(subscription.Source, dataSubscription);
                 }
 
-                await dataSubscription.Add(subscription.AggregationType);
+                if (Enum.TryParse(subscription.AggregationType, out AggregationType aggrType)) 
+                {
+                    await dataSubscription.Add(aggrType);
+                }
             }
         }
 
@@ -33,11 +38,14 @@ namespace TimeSeries.Api.Hubs
         {
             foreach (var subscription in subscriptions)
             {
-                var remainingSubs = await _subscriptions[subscription.Source].Remove(subscription.AggregationType);
-
-                if (remainingSubs <= 0)
+                if (Enum.TryParse(subscription.AggregationType, out AggregationType aggrType))
                 {
-                    _subscriptions.TryRemove(subscription.Source, out _);
+                    var remainingSubs = await _subscriptions[subscription.Source].Remove(aggrType);
+
+                    if (remainingSubs <= 0)
+                    {
+                        _subscriptions.TryRemove(subscription.Source, out _);
+                    }
                 }
             }
         }
