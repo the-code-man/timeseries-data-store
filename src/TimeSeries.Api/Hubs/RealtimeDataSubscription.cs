@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using TimeSeries.Shared.Contracts.Api;
+using TimeSeries.Shared.Contracts.Entities;
 using TimeSeries.Shared.Contracts.Services;
 
 namespace TimeSeries.Api.Hubs
@@ -29,6 +32,10 @@ namespace TimeSeries.Api.Hubs
                 // Log subscription already exists
             }
 
+            _client.OnRawProcessed(new RawTimeSeriesData[] { new RawTimeSeriesData { Time = DateTime.UtcNow, Values = new List<double> { 1, 2, 3 } } });
+
+            _client.OnAggrProcessed(new AggrTimeSeriesData[] { new AggrTimeSeriesData { Time = DateTime.UtcNow, Value = 2 } }, AggregationType.Min);
+
             return Task.CompletedTask;
         }
 
@@ -42,7 +49,7 @@ namespace TimeSeries.Api.Hubs
         public Task RemoveAll()
         {
             foreach (var aggrType in AggregationTypes)
-            { 
+            {
                 //TODO
             }
 

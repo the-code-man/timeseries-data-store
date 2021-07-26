@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace TimeSeries.Api.Hubs
 {
@@ -19,11 +20,21 @@ namespace TimeSeries.Api.Hubs
         public async Task Subscribe(Subscription[] subscriptions)
         {
             await _subscriptions[Context.ConnectionId].Subscribe(subscriptions);
+
+            foreach (var sub in subscriptions) 
+            {
+                _logger.LogInformation($"Subscription successfully created for Connection --> {Context.ConnectionId}, Subscription --> {sub.Source} ({sub.AggregationType})");
+            }
         }
 
         public async Task Unsubscribe(Subscription[] subscriptions)
         {
             await _subscriptions[Context.ConnectionId].Unsubscribe(subscriptions);
+
+            foreach (var sub in subscriptions)
+            {
+                _logger.LogInformation($"Subscription successfully removed for Connection --> {Context.ConnectionId}, Subscription --> {sub.Source} ({sub.AggregationType})");
+            }
         }
 
         public override Task OnConnectedAsync()
