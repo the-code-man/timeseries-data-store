@@ -23,7 +23,7 @@ namespace TimeSeries.Api.Services
             _mapper = mapper;
         }
 
-        public async Task<ReadResponse<List<AggrTimeSeriesData>>> GetHistoric(AggregationType aggregateType,
+        public async Task<ReadResponse<List<SingleValueTimeSeries>>> GetHistoric(AggregationType aggregateType,
             string timeSeriesSourceId,
             DateTime from,
             DateTime to,
@@ -39,10 +39,10 @@ namespace TimeSeries.Api.Services
                 To = Timestamp.FromDateTime(to.ToUniversalTime())
             }, cancellationToken: cancellationToken);
 
-            return _mapper.Map<ReadResponse<List<AggrTimeSeriesData>>>(response);
+            return _mapper.Map<ReadResponse<List<SingleValueTimeSeries>>>(response);
         }
 
-        public async Task<ReadResponse<AggrTimeSeriesData>> GetLatest(AggregationType aggregateType, 
+        public async Task<ReadResponse<SingleValueTimeSeries>> GetLatest(AggregationType aggregateType, 
             string timeSeriesSourceId, 
             CancellationToken cancellationToken)
         {
@@ -54,7 +54,7 @@ namespace TimeSeries.Api.Services
                 TimeSeriesSourceId = timeSeriesSourceId
             }, cancellationToken: cancellationToken);
 
-            return _mapper.Map<ReadResponse<AggrTimeSeriesData>>(response);
+            return _mapper.Map<ReadResponse<SingleValueTimeSeries>>(response);
         }
 
         private string GetAggregateServiceUri(AggregationType aggregateType) => aggregateType switch

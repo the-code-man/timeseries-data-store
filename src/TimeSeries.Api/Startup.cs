@@ -11,6 +11,7 @@ using System.Linq;
 using TimeSeries.Api.Hubs;
 using TimeSeries.Api.Modules;
 using TimeSeries.DataStore.Raw;
+using TimeSeries.Realtime.DataStream;
 using TimeSeries.Shared.Contracts.Extensions;
 using TimeSeries.Shared.Contracts.Settings;
 
@@ -34,7 +35,8 @@ namespace TimeSeries.Api
             .AllowAnyHeader()
             .AllowAnyMethod()));
 
-            services.AddControllers().AddJsonOptions(c => c.JsonSerializerOptions.PropertyNamingPolicy = null);
+            services.AddControllers()
+                .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
 
             services.AddApiVersioning(v =>
             {
@@ -43,10 +45,8 @@ namespace TimeSeries.Api
                 v.ReportApiVersions = true;
             });
 
-            services.AddSignalR(options =>
-            {
-                options.EnableDetailedErrors = true;
-            });
+            services.AddSignalR(options => options.EnableDetailedErrors = true)
+                .AddJsonProtocol(options => options.PayloadSerializerOptions.PropertyNamingPolicy = null);
 
             services.AddAppConfiguration<ServiceSettings>(Configuration.GetSection(nameof(ServiceSettings)));
             services.AddAppConfiguration<MessageBusSettings>(Configuration.GetSection(nameof(MessageBusSettings)));
@@ -65,6 +65,7 @@ namespace TimeSeries.Api
             var busSettings = Configuration.GetSection(nameof(MessageBusSettings)).Get<MessageBusSettings>();
 
             builder.RegisterModule(new DataStoreModule());
+            builder.RegisterModule(new DataStreamModule());
             builder.RegisterModule(new BusModule(busSettings));
             builder.RegisterModule(new ApiModule());
         }

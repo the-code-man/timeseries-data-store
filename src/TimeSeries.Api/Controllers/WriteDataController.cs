@@ -22,14 +22,14 @@ namespace TimeSeries.Api.Controllers
     public class WriteDataController : ControllerBase
     {
         private readonly ILogger<WriteDataController> _logger;
-        private readonly IWriteData<Entities.RawTimeSeries> _dataWriter;
+        private readonly IWriteData<Entities.MultiValueTimeSeries> _dataWriter;
         private readonly IWriteSource<string> _sourceWriter;
         private readonly IMapper _mapper;
         private readonly IProducer _messageBus;
         private readonly IHubContext<RealtimeDataHub> _hubContext;
 
         public WriteDataController(ILogger<WriteDataController> logger,
-            IWriteData<Entities.RawTimeSeries> dataWriter,
+            IWriteData<Entities.MultiValueTimeSeries> dataWriter,
             IWriteSource<string> sourceWriter,
             IMapper mapper,
             IProducer messageBus,
@@ -64,14 +64,14 @@ namespace TimeSeries.Api.Controllers
 
         [HttpPost("{sourceId}")]
         public async Task<IActionResult> Post(string sourceId,
-            [FromBody] ApiContracts.RawTimeSeriesData[] data,
+            [FromBody] ApiContracts.MultiValueTimeSeries[] data,
             CancellationToken token)
         {
             _logger.LogDebug($"Received {data.Length} data points for {sourceId}");
 
             try
             {
-                var svcData = _mapper.Map<Entities.RawTimeSeries[]>(data);
+                var svcData = _mapper.Map<Entities.MultiValueTimeSeries[]>(data);
                 var result = await _dataWriter.AddTimeSeriesData(sourceId, svcData, token);
                 return result.IsSuccess ?
                     Ok(new ApiContracts.WriteResponse
@@ -95,14 +95,14 @@ namespace TimeSeries.Api.Controllers
         [MapToApiVersion("2.0")]
         [HttpPost("{sourceId}")]
         public async Task<IActionResult> PostToServiceBus(string sourceId,
-            [FromBody] ApiContracts.RawTimeSeriesData[] data,
+            [FromBody] ApiContracts.MultiValueTimeSeries[] data,
             CancellationToken token)
         {
             _logger.LogDebug($"Received {data.Length} data points for {sourceId}");
 
             try
             {
-                var svcData = _mapper.Map<Entities.RawTimeSeries[]>(data);
+                var svcData = _mapper.Map<Entities.MultiValueTimeSeries[]>(data);
                 await _messageBus.Send(MessageBusQueue.RAW_DATA, sourceId, svcData, token);
 
                 return Ok(new ApiContracts.WriteResponse

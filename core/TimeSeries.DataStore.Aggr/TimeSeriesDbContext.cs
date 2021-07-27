@@ -7,6 +7,6 @@ namespace TimeSeries.DataStore.Aggr
     {
         public TimeSeriesDbContext(DbContextOptions<TimeSeriesDbContext> options) : base(options) { }
 
-        public DbSet<AggregatedTimeSeries> AggregatedTimeSeries { get; set; }
+        public DbSet<SingleValueTimeSeries> AggregatedTimeSeries { get; set; }
     }
 }

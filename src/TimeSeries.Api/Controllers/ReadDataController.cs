@@ -18,10 +18,10 @@ namespace TimeSeries.Api.Controllers
     public class ReadDataController : ControllerBase
     {
         private readonly IReadSource<string> _sourceReader;
-        private readonly IReadData<RawTimeSeries> _dataReader;
+        private readonly IReadData<MultiValueTimeSeries> _dataReader;
         private readonly IMapper _mapper;
 
-        public ReadDataController(IReadSource<string> sourceReader, IReadData<RawTimeSeries> dataReader, IMapper mapper)
+        public ReadDataController(IReadSource<string> sourceReader, IReadData<MultiValueTimeSeries> dataReader, IMapper mapper)
         {
             _sourceReader = sourceReader;
             _dataReader = dataReader;
@@ -57,7 +57,7 @@ namespace TimeSeries.Api.Controllers
             CancellationToken token)
         {
             var svcResponse = await _dataReader.GetHistoric(sourceId, from.ToUniversalTime(), to.ToUniversalTime(), token);
-            var apiResponse = _mapper.Map<ApiContracts.ReadResponse<List<ApiContracts.RawTimeSeriesData>>>(svcResponse);
+            var apiResponse = _mapper.Map<ApiContracts.ReadResponse<List<ApiContracts.MultiValueTimeSeries>>>(svcResponse);
 
             return Ok(apiResponse);
         }
@@ -66,7 +66,7 @@ namespace TimeSeries.Api.Controllers
         public async Task<IActionResult> Get(string sourceId, CancellationToken token)
         {
             var svcResponse = await _dataReader.GetLatest(sourceId, token);
-            var apiResponse = _mapper.Map<ApiContracts.ReadResponse<ApiContracts.RawTimeSeriesData>>(svcResponse);
+            var apiResponse = _mapper.Map<ApiContracts.ReadResponse<ApiContracts.MultiValueTimeSeries>>(svcResponse);
 
             return Ok(apiResponse);
         }

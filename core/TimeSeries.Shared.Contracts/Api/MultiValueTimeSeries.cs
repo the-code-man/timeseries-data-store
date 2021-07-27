@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TimeSeries.Shared.Contracts.Api
 {
-    public class RawTimeSeriesData
+    public class MultiValueTimeSeries
     {
         public DateTime Time { get; set; }
 

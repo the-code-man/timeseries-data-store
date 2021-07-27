@@ -4,17 +4,17 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TimeSeries.Shared.Contracts.Entities
 {
-    public class RawTimeSeriesSource
+    public class MultiValueTimeSeriesSource
     {
-        public RawTimeSeriesSource() { }
+        public MultiValueTimeSeriesSource() { }
 
-        public RawTimeSeriesSource(string sourceId)
+        public MultiValueTimeSeriesSource(string sourceId)
         {
             SourceId = sourceId;
-            RawData = new List<RawTimeSeries>(0);
+            RawData = new List<MultiValueTimeSeries>(0);
         }
 
-        public RawTimeSeriesSource(string sourceId, List<RawTimeSeries> rawData) : this(sourceId)
+        public MultiValueTimeSeriesSource(string sourceId, List<MultiValueTimeSeries> rawData) : this(sourceId)
         {
             RawData = rawData;
         }
@@ -24,6 +24,6 @@ namespace TimeSeries.Shared.Contracts.Entities
         public string SourceId { get; set; }
 
         [ForeignKey("SourceId")]
-        public List<RawTimeSeries> RawData { get; set; }
+        public List<MultiValueTimeSeries> RawData { get; set; }
     }
 }

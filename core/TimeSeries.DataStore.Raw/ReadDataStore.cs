@@ -10,7 +10,7 @@ using TimeSeries.Shared.Contracts.Internal;
 
 namespace TimeSeries.DataStore.Raw
 {
-    public class ReadDataStore : IReadSource<string>, IReadData<RawTimeSeries>
+    public class ReadDataStore : IReadSource<string>, IReadData<MultiValueTimeSeries>
     {
         private readonly TimeSeriesDbContext _timeSeriesDataContext;
 
@@ -37,11 +37,11 @@ namespace TimeSeries.DataStore.Raw
             });
         }
 
-        public Task<ReadResponse<List<RawTimeSeries>>> GetHistoric(string sourceId, DateTime from, DateTime to, CancellationToken token)
+        public Task<ReadResponse<List<MultiValueTimeSeries>>> GetHistoric(string sourceId, DateTime from, DateTime to, CancellationToken token)
         {
             if (token.IsCancellationRequested)
             {
-                return Task.FromResult(new ReadResponse<List<RawTimeSeries>>
+                return Task.FromResult(new ReadResponse<List<MultiValueTimeSeries>>
                 {
                     IsSuccess = false,
                     ErrorMessage = "Cancellation requested"
@@ -53,7 +53,7 @@ namespace TimeSeries.DataStore.Raw
 
             try
             {
-                return Task.FromResult(new ReadResponse<List<RawTimeSeries>>
+                return Task.FromResult(new ReadResponse<List<MultiValueTimeSeries>>
                 {
                     Data = _timeSeriesDataContext.TimeSeriesSource
                                              .Where(v => v.SourceId == sourceId)
@@ -67,7 +67,7 @@ namespace TimeSeries.DataStore.Raw
             }
             catch (InvalidOperationException)
             {
-                return Task.FromResult(new ReadResponse<List<RawTimeSeries>>
+                return Task.FromResult(new ReadResponse<List<MultiValueTimeSeries>>
                 {
                     IsSuccess = false,
                     ErrorMessage = $"No data available for '{sourceId}' source"
@@ -75,11 +75,11 @@ namespace TimeSeries.DataStore.Raw
             }
         }
 
-        public Task<ReadResponse<RawTimeSeries>> GetLatest(string sourceId, CancellationToken token)
+        public Task<ReadResponse<MultiValueTimeSeries>> GetLatest(string sourceId, CancellationToken token)
         {
             if (token.IsCancellationRequested)
             {
-                return Task.FromResult(new ReadResponse<RawTimeSeries>
+                return Task.FromResult(new ReadResponse<MultiValueTimeSeries>
                 {
                     IsSuccess = false,
                     ErrorMessage = "Cancellation requested"
@@ -88,7 +88,7 @@ namespace TimeSeries.DataStore.Raw
 
             try
             {
-                return Task.FromResult(new ReadResponse<RawTimeSeries>
+                return Task.FromResult(new ReadResponse<MultiValueTimeSeries>
                 {
                     Data = _timeSeriesDataContext.TimeSeriesSource
                                              .Where(v => v.SourceId == sourceId)
@@ -102,7 +102,7 @@ namespace TimeSeries.DataStore.Raw
             }
             catch (InvalidOperationException)
             {
-                return Task.FromResult(new ReadResponse<RawTimeSeries>
+                return Task.FromResult(new ReadResponse<MultiValueTimeSeries>
                 {
                     IsSuccess = false,
                     ErrorMessage = $"No data available for '{sourceId}' source"

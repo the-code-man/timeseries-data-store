@@ -9,16 +9,16 @@ using TimeSeries.Shared.Contracts.Entities;
 
 namespace TimeSeries.DataIngestor.Services
 {
-    public class IngestorService : BackgroundService, IDataProcessor<RawTimeSeriesSource>
+    public class IngestorService : BackgroundService, IDataProcessor<MultiValueTimeSeriesSource>
     {
         private readonly ILogger<IngestorService> _logger;
         private readonly IBusControl _messageBus;
-        private readonly IWriteData<RawTimeSeries> _dataStore;
+        private readonly IWriteData<MultiValueTimeSeries> _dataStore;
         private readonly CancellationTokenSource _tokenSource;
 
         public IngestorService(ILogger<IngestorService> logger,
             IBusControl messageBus,
-            IWriteData<RawTimeSeries> dataStore)
+            IWriteData<MultiValueTimeSeries> dataStore)
         {
             _logger = logger;
             _messageBus = messageBus;
@@ -39,7 +39,7 @@ namespace TimeSeries.DataIngestor.Services
             return _messageBus.StopAsync(cancellationToken);
         }
 
-        public Task Process(RawTimeSeriesSource rawTimeSeries)
+        public Task Process(MultiValueTimeSeriesSource rawTimeSeries)
         {
             return _dataStore.AddTimeSeriesData(rawTimeSeries.SourceId, rawTimeSeries.RawData.ToArray(), _tokenSource.Token);
         }

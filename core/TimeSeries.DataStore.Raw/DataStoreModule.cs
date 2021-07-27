@@ -25,12 +25,12 @@ namespace TimeSeries.DataStore.Raw
 
             builder.RegisterType<ReadDataStore>()
                 .As<IReadSource<string>>()
-                .As<IReadData<RawTimeSeries>>()
+                .As<IReadData<MultiValueTimeSeries>>()
                 .InstancePerLifetimeScope();
 
             builder.RegisterType<WriteDataStore>()
                 .As<IWriteSource<string>>()
-                .As<IWriteData<RawTimeSeries>>()
+                .As<IWriteData<MultiValueTimeSeries>>()
                 .InstancePerLifetimeScope();
         }
     }

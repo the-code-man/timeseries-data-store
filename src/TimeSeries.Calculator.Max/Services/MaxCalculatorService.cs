@@ -15,12 +15,12 @@ namespace TimeSeries.Calculator.Max.Services
     {
         private readonly ILogger<MaxCalculatorService> _logger;
         private readonly IBusControl _messageBus;
-        private readonly IWriteData<AggregatedTimeSeries> _dataStore;
+        private readonly IWriteData<SingleValueTimeSeries> _dataStore;
         private readonly CancellationTokenSource _tokenSource;
 
         public MaxCalculatorService(ILogger<MaxCalculatorService> logger,
             IBusControl messageBus,
-            IWriteData<AggregatedTimeSeries> dataStore)
+            IWriteData<SingleValueTimeSeries> dataStore)
         {
             _logger = logger;
             _messageBus = messageBus;
@@ -46,7 +46,7 @@ namespace TimeSeries.Calculator.Max.Services
             _logger.LogInformation($"Received processed timeseries data. Source: {processedTimeSeries.SourceId}");
 
             var maxData = processedTimeSeries.RawData
-                .Select(d => new AggregatedTimeSeries
+                .Select(d => new SingleValueTimeSeries
                 {
                     Time = d.Time,
                     Value = d.Values.Max()

@@ -23,11 +23,11 @@ namespace TimeSeries.DataStore.Aggr
             });
 
             builder.RegisterType<ReadDataStore>()
-                .As<IReadData<AggregatedTimeSeries>>()
+                .As<IReadData<SingleValueTimeSeries>>()
                 .InstancePerLifetimeScope();
 
             builder.RegisterType<WriteDataStore>()
-                .As<IWriteData<AggregatedTimeSeries>>()
+                .As<IWriteData<SingleValueTimeSeries>>()
                 .InstancePerLifetimeScope();
         }
     }

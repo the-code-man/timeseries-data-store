@@ -15,13 +15,13 @@ namespace TimeSeries.gRPC.Server.Profiles
         {
             // Entities --> Protos
 
-            CreateMap<Entities.AggregatedTimeSeries, AggregatedTimeSeries>()
+            CreateMap<Entities.SingleValueTimeSeries, AggregatedTimeSeries>()
                 .ForPath(dest => dest.Time, input => input.MapFrom(i => Timestamp.FromDateTime(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(i.Time))))
                 .ForPath(dest => dest.Value, input => input.MapFrom(i => i.Value));
 
             // Entities/Internal Objects --> API objects
 
-            CreateMap<Api.ReadResponse<Api.AggrTimeSeriesData>, Internal.ReadResponse<Entities.AggregatedTimeSeries>>();
+            CreateMap<Api.ReadResponse<Api.SingleValueTimeSeries>, Internal.ReadResponse<Entities.SingleValueTimeSeries>>();
         }
     }
 }

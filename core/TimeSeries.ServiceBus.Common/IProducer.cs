@@ -6,6 +6,6 @@ namespace TimeSeries.ServiceBus.Common
 {
     public interface IProducer
     {
-        Task Send(string queue, string sourceId, RawTimeSeries[] data, CancellationToken ct);
+        Task Send(string queue, string sourceId, MultiValueTimeSeries[] data, CancellationToken ct);
     }
 }

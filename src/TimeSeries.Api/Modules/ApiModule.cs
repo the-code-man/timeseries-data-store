@@ -26,7 +26,9 @@ namespace TimeSeries.Api.Modules
                 .As<IMapper>()
                 .InstancePerLifetimeScope();
 
-            builder.RegisterType<CalculatorService>().As<ICalculatorService>().InstancePerLifetimeScope();
+            builder.RegisterType<CalculatorService>()
+                .As<ICalculatorService>()
+                .InstancePerLifetimeScope();
         }
     }
 }

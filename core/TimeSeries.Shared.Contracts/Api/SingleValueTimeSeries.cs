@@ -2,7 +2,7 @@
 
 namespace TimeSeries.Shared.Contracts.Api
 {
-    public class AggrTimeSeriesData
+    public class SingleValueTimeSeries
     {
         public DateTime Time { get; set; }
 

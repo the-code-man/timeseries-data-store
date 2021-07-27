@@ -22,6 +22,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\core\TimeSeries.gRPC.Client\TimeSeries.gRPC.Client.csproj" />
 		<ProjectReference Include="..\..\core\TimeSeries.DataStore.Raw\TimeSeries.DataStore.Raw.csproj" />
+		<ProjectReference Include="..\..\core\TimeSeries.Realtime.DataStream\TimeSeries.Realtime.DataStream.csproj" />
 		<ProjectReference Include="..\..\core\TimeSeries.ServiceBus.Common\TimeSeries.ServiceBus.Common.csproj" />
 	</ItemGroup>
 

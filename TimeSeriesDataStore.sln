@@ -41,6 +41,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeSeries.Realtime.DataStream", "core\TimeSeries.Realtime.DataStream\TimeSeries.Realtime.DataStream.csproj", "{9563703D-F5E8-4A84-9BAE-2AE3AE1559FA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,6 +97,10 @@ Global
 		{9DA5F04E-6A36-4AB0-BD02-1F1B09A7A95B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9DA5F04E-6A36-4AB0-BD02-1F1B09A7A95B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9DA5F04E-6A36-4AB0-BD02-1F1B09A7A95B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9563703D-F5E8-4A84-9BAE-2AE3AE1559FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9563703D-F5E8-4A84-9BAE-2AE3AE1559FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9563703D-F5E8-4A84-9BAE-2AE3AE1559FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9563703D-F5E8-4A84-9BAE-2AE3AE1559FA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -112,6 +118,7 @@ Global
 		{F304993D-63AD-4A85-8BF3-D6F6F0E821A6} = {39DB53CB-AEC9-4B3B-A673-EA4B95DB654D}
 		{BC38DDA3-17A0-4D67-98AA-22690C99EF95} = {39DB53CB-AEC9-4B3B-A673-EA4B95DB654D}
 		{9DA5F04E-6A36-4AB0-BD02-1F1B09A7A95B} = {39DB53CB-AEC9-4B3B-A673-EA4B95DB654D}
+		{9563703D-F5E8-4A84-9BAE-2AE3AE1559FA} = {39DB53CB-AEC9-4B3B-A673-EA4B95DB654D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A63AEEBD-7E57-4440-90B7-712EB86D6C1F}

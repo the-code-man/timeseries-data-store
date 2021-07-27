@@ -7,18 +7,18 @@ using TimeSeries.Shared.Contracts.Internal;
 
 namespace TimeSeries.ServiceBus.Consumer
 {
-    public class TimeSeriesConsumer : IConsumer<RawTimeSeriesSource>
+    public class TimeSeriesConsumer : IConsumer<MultiValueTimeSeriesSource>
     {
         private readonly ILogger<TimeSeriesConsumer> _logger;
-        private readonly IDataProcessor<RawTimeSeriesSource> _dataProcessor;
+        private readonly IDataProcessor<MultiValueTimeSeriesSource> _dataProcessor;
 
-        public TimeSeriesConsumer(ILogger<TimeSeriesConsumer> logger, IDataProcessor<RawTimeSeriesSource> dataProcessor)
+        public TimeSeriesConsumer(ILogger<TimeSeriesConsumer> logger, IDataProcessor<MultiValueTimeSeriesSource> dataProcessor)
         {
             _logger = logger;
             _dataProcessor = dataProcessor;
         }
 
-        public async Task Consume(ConsumeContext<RawTimeSeriesSource> context)
+        public async Task Consume(ConsumeContext<MultiValueTimeSeriesSource> context)
         {
             var data = context.Message;
 

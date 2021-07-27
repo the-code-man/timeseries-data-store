@@ -12,7 +12,7 @@ namespace TimeSeries.DataIngestor.Modules
         {
             builder.RegisterType<IngestorService>()
                    .As<IHostedService>()
-                   .As<IDataProcessor<RawTimeSeriesSource>>()
+                   .As<IDataProcessor<MultiValueTimeSeriesSource>>()
                    .SingleInstance();
         }
     }

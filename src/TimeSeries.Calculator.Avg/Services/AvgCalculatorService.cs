@@ -15,12 +15,12 @@ namespace TimeSeries.Calculator.Avg.Services
     {
         private readonly ILogger<AvgCalculatorService> _logger;
         private readonly IBusControl _messageBus;
-        private readonly IWriteData<AggregatedTimeSeries> _dataStore;
+        private readonly IWriteData<SingleValueTimeSeries> _dataStore;
         private readonly CancellationTokenSource _tokenSource;
 
         public AvgCalculatorService(ILogger<AvgCalculatorService> logger,
             IBusControl messageBus,
-            IWriteData<AggregatedTimeSeries> dataStore)
+            IWriteData<SingleValueTimeSeries> dataStore)
         {
             _logger = logger;
             _messageBus = messageBus;
@@ -46,7 +46,7 @@ namespace TimeSeries.Calculator.Avg.Services
             _logger.LogInformation($"Received processed timeseries data. Source: {processedTimeSeries.SourceId}");
 
             var avgData = processedTimeSeries.RawData
-                .Select(d => new AggregatedTimeSeries
+                .Select(d => new SingleValueTimeSeries
                 {
                     Source = processedTimeSeries.SourceId,
                     Time = d.Time,

@@ -3,48 +3,43 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
-using System.Linq;
+using TimeSeries.Realtime.DataStream.Hub;
+using TimeSeries.Shared.Contracts.DataStream;
 
 namespace TimeSeries.Api.Hubs
 {
     public class RealtimeDataHub : Hub<IRealtimeDataClient>
     {
         private readonly ILogger<RealtimeDataHub> _logger;
+        private readonly ClientConnectionFactory _connectionFactory;
         private static readonly ConcurrentDictionary<string, ClientConnection> _subscriptions = new();
 
-        public RealtimeDataHub(ILogger<RealtimeDataHub> logger)
+        public RealtimeDataHub(ILogger<RealtimeDataHub> logger, ClientConnectionFactory connectionFactory)
         {
             _logger = logger;
+            _connectionFactory = connectionFactory;
         }
 
-        public async Task Subscribe(Subscription[] subscriptions)
+        public void Subscribe(string source, string aggregationType)
         {
-            await _subscriptions[Context.ConnectionId].Subscribe(subscriptions);
-
-            foreach (var sub in subscriptions) 
-            {
-                _logger.LogInformation($"Subscription successfully created for Connection --> {Context.ConnectionId}, Subscription --> {sub.Source} ({sub.AggregationType})");
-            }
+            _subscriptions[Context.ConnectionId].Subscribe(source, aggregationType);
+            _logger.LogInformation($"Subscription successfully created for Connection --> {Context.ConnectionId}, Subscription --> {source} ({aggregationType})");
         }
 
-        public async Task Unsubscribe(Subscription[] subscriptions)
+        public void Unsubscribe(string source, string aggregationType)
         {
-            await _subscriptions[Context.ConnectionId].Unsubscribe(subscriptions);
-
-            foreach (var sub in subscriptions)
-            {
-                _logger.LogInformation($"Subscription successfully removed for Connection --> {Context.ConnectionId}, Subscription --> {sub.Source} ({sub.AggregationType})");
-            }
+            _subscriptions[Context.ConnectionId].Unsubscribe(source, aggregationType);
+            _logger.LogInformation($"Subscription successfully removed for Connection --> {Context.ConnectionId}, Subscription --> {source} ({aggregationType})");
         }
 
         public override Task OnConnectedAsync()
         {
-            _logger.LogDebug($"Client with id {Context.ConnectionId} connected to the hub");
-
             var connectionId = Context.ConnectionId;
             var client = Clients.Client(connectionId);
 
-            if (_subscriptions.TryAdd(connectionId, new ClientConnection(client)))
+            _logger.LogDebug($"Client with id {Context.ConnectionId} connected to the hub");
+
+            if (_subscriptions.TryAdd(connectionId, _connectionFactory.Create(connectionId, client)))
             {
                 _logger.LogDebug($"Subscription successfully created for client with id {Context.ConnectionId}");
             }
@@ -56,11 +51,11 @@ namespace TimeSeries.Api.Hubs
             return base.OnConnectedAsync();
         }
 
-        public override async Task OnDisconnectedAsync(Exception exception)
+        public override Task OnDisconnectedAsync(Exception exception)
         {
             if (_subscriptions.TryRemove(Context.ConnectionId, out ClientConnection clientConnection))
             {
-                await clientConnection.UnsubscribeAll();
+                clientConnection.UnsubscribeAll();
                 _logger.LogDebug($"Subscription successfully removed for client with id {Context.ConnectionId}");
             }
             else
@@ -68,7 +63,7 @@ namespace TimeSeries.Api.Hubs
                 _logger.LogError($"Unable to remove subscription for client with User name -> {Context.User.Identity.Name}, ConnectionId -> {Context.ConnectionId}");
             }
 
-            await base.OnDisconnectedAsync(exception);
+            return base.OnDisconnectedAsync(exception);
         }
     }
 }

@@ -9,7 +9,7 @@ using TimeSeries.Shared.Contracts.Internal;
 
 namespace TimeSeries.DataStore.Aggr
 {
-    public class WriteDataStore : IWriteData<AggregatedTimeSeries>
+    public class WriteDataStore : IWriteData<SingleValueTimeSeries>
     {
         private readonly TimeSeriesDbContext _timeSeriesDataContext;
         private readonly ILogger<WriteDataStore> _logger;
@@ -20,7 +20,7 @@ namespace TimeSeries.DataStore.Aggr
             _logger = logger;
         }
 
-        public async Task<WriteResponse> AddTimeSeriesData(string source, AggregatedTimeSeries[] aggregatedTimeSeries, CancellationToken cancellationToken)
+        public async Task<WriteResponse> AddTimeSeriesData(string source, SingleValueTimeSeries[] aggregatedTimeSeries, CancellationToken cancellationToken)
         {
             var opResult = false;
             string errorMessage = string.Empty;

@@ -10,7 +10,7 @@ using TimeSeries.Shared.Contracts.Internal;
 
 namespace TimeSeries.DataStore.Raw
 {
-    public class WriteDataStore : IWriteSource<string>, IWriteData<RawTimeSeries>
+    public class WriteDataStore : IWriteSource<string>, IWriteData<MultiValueTimeSeries>
     {
         private readonly TimeSeriesDbContext _timeSeriesDataContext;
         private readonly ILogger<WriteDataStore> _logger;
@@ -28,7 +28,7 @@ namespace TimeSeries.DataStore.Raw
 
             try
             {
-                await _timeSeriesDataContext.TimeSeriesSource.AddRangeAsync(sources.Select(s => new RawTimeSeriesSource(s)));
+                await _timeSeriesDataContext.TimeSeriesSource.AddRangeAsync(sources.Select(s => new MultiValueTimeSeriesSource(s)));
                 var affRows = await _timeSeriesDataContext.SaveChangesAsync(ct);
 
                 opResult = affRows > 0;
@@ -58,7 +58,7 @@ namespace TimeSeries.DataStore.Raw
             };
         }
 
-        public async Task<WriteResponse> AddTimeSeriesData(string source, RawTimeSeries[] rawTimeSeries, CancellationToken ct)
+        public async Task<WriteResponse> AddTimeSeriesData(string source, MultiValueTimeSeries[] rawTimeSeries, CancellationToken ct)
         {
             var opResult = false;
             string errorMessage = string.Empty;

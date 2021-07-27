@@ -7,6 +7,6 @@ namespace TimeSeries.Shared.Contracts.Internal
     {
         public string SourceId { get; set; }
 
-        public List<RawTimeSeries> RawData { get; set; }
+        public List<MultiValueTimeSeries> RawData { get; set; }
     }
 }

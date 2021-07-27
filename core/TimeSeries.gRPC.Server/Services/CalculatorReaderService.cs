@@ -10,10 +10,10 @@ namespace TimeSeries.gRPC.Server.Services
     public class CalculatorReaderService : AggregatedTimeSeriesService.AggregatedTimeSeriesServiceBase
     {
         private readonly ILogger<CalculatorReaderService> _logger;
-        private readonly IReadData<Shared.Contracts.Entities.AggregatedTimeSeries> _dataReader;
+        private readonly IReadData<Shared.Contracts.Entities.SingleValueTimeSeries> _dataReader;
         private readonly IMapper _mapper;
 
-        public CalculatorReaderService(ILogger<CalculatorReaderService> logger, IReadData<Shared.Contracts.Entities.AggregatedTimeSeries> dataReader, IMapper mapper)
+        public CalculatorReaderService(ILogger<CalculatorReaderService> logger, IReadData<Shared.Contracts.Entities.SingleValueTimeSeries> dataReader, IMapper mapper)
         {
             _logger = logger;
             _dataReader = dataReader;

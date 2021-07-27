@@ -20,13 +20,13 @@ namespace TimeSeries.Api
             _bus = bus;
         }
 
-        public async Task Send(string queue, string sourceId, RawTimeSeries[] data, CancellationToken ct)
+        public async Task Send(string queue, string sourceId, MultiValueTimeSeries[] data, CancellationToken ct)
         {
             // TODO :  Publisher Confirms and Consumer Acknowledgements, Production Checklist and Monitoring
 
             try
             {
-                var message = new RawTimeSeriesSource(sourceId, new List<RawTimeSeries>(data));
+                var message = new MultiValueTimeSeriesSource(sourceId, new List<MultiValueTimeSeries>(data));
 
                 Uri uri = new($"queue:{queue}");
                 var endpoint = await _bus.GetSendEndpoint(uri);

@@ -2,7 +2,7 @@
 
 namespace TimeSeries.Shared.Contracts.Entities
 {
-    public class AggregatedTimeSeries
+    public class SingleValueTimeSeries
     {
         [Key]
         public int DataId { get; set; }
