@@ -29,7 +29,7 @@ namespace TimeSeries.DataIngestor.Modules
                         h.Password(_busSettings.Password);
                     });
 
-                    cfg.ReceiveEndpoint(MessageBusQueue.RAW_DATA, ep =>
+                    cfg.ReceiveEndpoint(MessageBusQueue.RAW_DATA_PROCESS, ep =>
                     {
                         ep.PrefetchCount = 16;
                         ep.UseMessageRetry(r => r.Interval(2, 100));

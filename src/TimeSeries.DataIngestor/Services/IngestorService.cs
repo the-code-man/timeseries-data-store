@@ -1,11 +1,15 @@
-﻿using MassTransit;
+﻿using AutoMapper;
+using MassTransit;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Threading;
 using System.Threading.Tasks;
 using TimeSeries.ServiceBus.Common;
 using TimeSeries.Shared.Contracts.DataStore;
+using TimeSeries.Shared.Contracts.DataStream;
 using TimeSeries.Shared.Contracts.Entities;
+using TimeSeries.Shared.Contracts.Services;
+using ApiContracts = TimeSeries.Shared.Contracts.Api;
 
 namespace TimeSeries.DataIngestor.Services
 {
@@ -14,15 +18,18 @@ namespace TimeSeries.DataIngestor.Services
         private readonly ILogger<IngestorService> _logger;
         private readonly IBusControl _messageBus;
         private readonly IWriteData<MultiValueTimeSeries> _dataStore;
+        private readonly IMapper _mapper;
         private readonly CancellationTokenSource _tokenSource;
 
         public IngestorService(ILogger<IngestorService> logger,
             IBusControl messageBus,
-            IWriteData<MultiValueTimeSeries> dataStore)
+            IWriteData<MultiValueTimeSeries> dataStore,
+            IMapper mapper)
         {
             _logger = logger;
             _messageBus = messageBus;
             _dataStore = dataStore;
+            _mapper = mapper;
             _tokenSource = new CancellationTokenSource();
         }
 
@@ -39,9 +46,21 @@ namespace TimeSeries.DataIngestor.Services
             return _messageBus.StopAsync(cancellationToken);
         }
 
-        public Task Process(MultiValueTimeSeriesSource rawTimeSeries)
+        public async Task Process(MultiValueTimeSeriesSource rawTimeSeries)
         {
-            return _dataStore.AddTimeSeriesData(rawTimeSeries.SourceId, rawTimeSeries.RawData.ToArray(), _tokenSource.Token);
+            var response = await _dataStore.AddTimeSeriesData(rawTimeSeries.SourceId,
+                rawTimeSeries.RawData.ToArray(),
+                _tokenSource.Token);
+
+            if (response.IsSuccess)
+            {
+                await _messageBus.Publish(new RealtimeDataEvent
+                {
+                    AggregationType = AggregationType.Raw,
+                    Data = _mapper.Map<ApiContracts.MultiValueTimeSeries[]>(rawTimeSeries.RawData),
+                    Source = rawTimeSeries.SourceId
+                }, _tokenSource.Token);
+            }
         }
     }
 }

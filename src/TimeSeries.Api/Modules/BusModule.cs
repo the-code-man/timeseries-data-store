@@ -1,5 +1,7 @@
 ﻿using Autofac;
+using GreenPipes;
 using MassTransit;
+using TimeSeries.Realtime.DataStream;
 using TimeSeries.ServiceBus.Common;
 using TimeSeries.Shared.Contracts.Settings;
 
@@ -20,6 +22,8 @@ namespace TimeSeries.Api.Modules
 
             builder.AddMassTransit(v =>
             {
+                v.AddConsumer<NotificationService>();
+
                 v.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(cfg =>
                 {
                     cfg.Host(_busSettings.Host, h =>
@@ -27,6 +31,14 @@ namespace TimeSeries.Api.Modules
                         h.Username(_busSettings.UserName);
                         h.Password(_busSettings.Password);
                     });
+
+                    cfg.ReceiveEndpoint(MessageBusQueue.PROCESSED_DATA, ep =>
+                    {
+                        ep.PrefetchCount = 16;
+                        ep.UseMessageRetry(r => r.Interval(2, 100));
+                        ep.ConfigureConsumer<NotificationService>(provider);     // Link endpoint to consumer
+                    });
+
                 }));
             });
         }

@@ -58,8 +58,9 @@ namespace TimeSeries.DataStore.Aggr
 
             return Task.FromResult(new ReadResponse<SingleValueTimeSeries>
             {
-                Data = _timeSeriesDataContext.AggregatedTimeSeries.Where(v => v.Source == sourceId)
-                .OrderByDescending(v => v.Time).First(),
+                Data = _timeSeriesDataContext.AggregatedTimeSeries
+                        .Where(v => v.Source == sourceId)
+                        .OrderByDescending(v => v.Time).FirstOrDefault(),
 
                 IsSuccess = true
             });

@@ -95,7 +95,8 @@ namespace TimeSeries.DataStore.Raw
                                              .Include(v => v.RawData)
                                              .Single()
                                              .RawData
-                                             .OrderByDescending(v => v.Time).First(),
+                                             .OrderByDescending(v => v.Time)
+                                             .FirstOrDefault(),
 
                     IsSuccess = true
                 });

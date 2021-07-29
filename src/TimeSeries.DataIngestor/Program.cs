@@ -17,7 +17,7 @@ namespace TimeSeries.DataIngestor
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args).ConfigureLogging((_, builder) =>
             {
-                builder.AddFile("logs/ingestor-{Date}", isJson: false);
+                builder.AddFile("C:/logs/ingestor-{Date}", isJson: false);
             })
             .UseServiceProviderFactory(new AutofacServiceProviderFactory())
             .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>());

@@ -17,7 +17,7 @@ namespace TimeSeries.Calculator.Avg
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args).ConfigureLogging((_, builder) =>
             {
-                builder.AddFile("logs/avg-calculator-{Date}", isJson: false);
+                builder.AddFile("C:/logs/avg-calculator-{Date}", isJson: false);
             })
             .UseServiceProviderFactory(new AutofacServiceProviderFactory())
             .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>());

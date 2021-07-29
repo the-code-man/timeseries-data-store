@@ -1,4 +1,5 @@
-﻿using MassTransit;
+﻿using AutoMapper;
+using MassTransit;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Linq;
@@ -6,8 +7,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using TimeSeries.ServiceBus.Common;
 using TimeSeries.Shared.Contracts.DataStore;
+using TimeSeries.Shared.Contracts.DataStream;
 using TimeSeries.Shared.Contracts.Entities;
 using TimeSeries.Shared.Contracts.Internal;
+using TimeSeries.Shared.Contracts.Services;
+using ApiContracts = TimeSeries.Shared.Contracts.Api;
 
 namespace TimeSeries.Calculator.Max.Services
 {
@@ -16,15 +20,18 @@ namespace TimeSeries.Calculator.Max.Services
         private readonly ILogger<MaxCalculatorService> _logger;
         private readonly IBusControl _messageBus;
         private readonly IWriteData<SingleValueTimeSeries> _dataStore;
+        private readonly IMapper _mapper;
         private readonly CancellationTokenSource _tokenSource;
 
         public MaxCalculatorService(ILogger<MaxCalculatorService> logger,
             IBusControl messageBus,
+            IMapper mapper,
             IWriteData<SingleValueTimeSeries> dataStore)
         {
             _logger = logger;
             _messageBus = messageBus;
             _dataStore = dataStore;
+            _mapper = mapper;
             _tokenSource = new CancellationTokenSource();
         }
 
@@ -41,7 +48,7 @@ namespace TimeSeries.Calculator.Max.Services
             return _messageBus.StopAsync(cancellationToken);
         }
 
-        public Task Process(ProcessedTimeSeries processedTimeSeries)
+        public async Task Process(ProcessedTimeSeries processedTimeSeries)
         {
             _logger.LogInformation($"Received processed timeseries data. Source: {processedTimeSeries.SourceId}");
 
@@ -52,7 +59,17 @@ namespace TimeSeries.Calculator.Max.Services
                     Value = d.Values.Max()
                 }).ToArray();
 
-            return _dataStore.AddTimeSeriesData(processedTimeSeries.SourceId, maxData, _tokenSource.Token);
+            var response = await _dataStore.AddTimeSeriesData(processedTimeSeries.SourceId, maxData, _tokenSource.Token);
+
+            if (response.IsSuccess)
+            {
+                await _messageBus.Publish(new RealtimeDataEvent
+                {
+                    AggregationType = AggregationType.Max,
+                    Data = _mapper.Map<ApiContracts.MultiValueTimeSeries[]>(maxData),
+                    Source = processedTimeSeries.SourceId
+                }, _tokenSource.Token);
+            }
         }
     }
 }

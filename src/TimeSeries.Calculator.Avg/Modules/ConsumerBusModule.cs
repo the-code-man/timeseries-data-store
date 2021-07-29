@@ -19,7 +19,7 @@ namespace TimeSeries.Calculator.Avg.Modules
         {
             builder.AddMassTransit(v =>
             {
-                v.AddConsumer<ProcessedTimeSeriesConsumer>();            //  Add one or more consumers to the transit
+                v.AddConsumer<RawTimeSeriesConsumer>();            //  Add one or more consumers to the transit
 
                 v.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(cfg =>
                 {
@@ -29,11 +29,11 @@ namespace TimeSeries.Calculator.Avg.Modules
                         h.Password(_busSettings.Password);
                     });
 
-                    cfg.ReceiveEndpoint(MessageBusQueue.PROCESSED_DATA_AVG, ep =>
+                    cfg.ReceiveEndpoint(MessageBusQueue.AVG_DATA_PROCESS, ep =>
                     {
                         ep.PrefetchCount = 16;
                         ep.UseMessageRetry(r => r.Interval(2, 100));
-                        ep.ConfigureConsumer<ProcessedTimeSeriesConsumer>(provider);     // Link endpoint to consumer
+                        ep.ConfigureConsumer<RawTimeSeriesConsumer>(provider);     // Link endpoint to consumer
                     });
                 }));
             });

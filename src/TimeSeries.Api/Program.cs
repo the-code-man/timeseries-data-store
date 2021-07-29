@@ -15,17 +15,8 @@ namespace TimeSeries.Api
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args).ConfigureLogging((_, builder) =>
             {
-                builder.AddFile("logs/api-{Date}", isJson: false);
+                builder.AddFile("C:/logs/api-{Date}", isJson: false);
             })
-            //.ConfigureAppConfiguration((hostingContext, configBuilder) =>
-            //{
-            //    var env = hostingContext.HostingEnvironment;
-                
-            //    configBuilder
-            //    .AddJsonFile("appsettings.json", optional: true)
-            //    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-            //    .AddEnvironmentVariables();
-            //})
             .UseServiceProviderFactory(new AutofacServiceProviderFactory())
             .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>());
     }

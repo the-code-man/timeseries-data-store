@@ -22,7 +22,7 @@ namespace TimeSeries.Api
 
         public async Task Send(string queue, string sourceId, MultiValueTimeSeries[] data, CancellationToken ct)
         {
-            // TODO :  Publisher Confirms and Consumer Acknowledgements, Production Checklist and Monitoring
+            // TODO :  Publisher Confirms and Consumer Acknowledgments, Production Checklist and Monitoring
 
             try
             {
@@ -36,12 +36,12 @@ namespace TimeSeries.Api
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error occured while sending message to bus", ex);
+                _logger.LogError("Error occurred while sending message to bus", ex);
             }
         }
     }
 }
-/* implementation directly RabbitMQ libary
+/* implementation directly RabbitMQ library
  * 
  private readonly ConnectionFactory _factory;
  private readonly IModel _channel;

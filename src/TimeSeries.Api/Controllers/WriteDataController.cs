@@ -1,12 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
-using TimeSeries.Api.Hubs;
 using TimeSeries.ServiceBus.Common;
 using TimeSeries.Shared.Contracts.DataStore;
 using TimeSeries.Shared.Contracts.Settings;
@@ -26,21 +24,18 @@ namespace TimeSeries.Api.Controllers
         private readonly IWriteSource<string> _sourceWriter;
         private readonly IMapper _mapper;
         private readonly IProducer _messageBus;
-        private readonly IHubContext<RealtimeDataHub> _hubContext;
 
         public WriteDataController(ILogger<WriteDataController> logger,
             IWriteData<Entities.MultiValueTimeSeries> dataWriter,
             IWriteSource<string> sourceWriter,
             IMapper mapper,
-            IProducer messageBus,
-            IHubContext<RealtimeDataHub> hubContext)
+            IProducer messageBus)
         {
             _dataWriter = dataWriter;
             _sourceWriter = sourceWriter;
             _mapper = mapper;
             _logger = logger;
             _messageBus = messageBus;
-            _hubContext = hubContext;
         }
 
         [HttpPost]
@@ -86,7 +81,7 @@ namespace TimeSeries.Api.Controllers
             }
             catch (AutoMapperMappingException ex)
             {
-                var errorMessage = "Error occured while trying to map DTO to internal Model.";
+                var errorMessage = "Error occurred while trying to map DTO to internal Model.";
                 _logger.LogError(errorMessage, ex);
                 return BadRequest(errorMessage);
             }
@@ -103,7 +98,7 @@ namespace TimeSeries.Api.Controllers
             try
             {
                 var svcData = _mapper.Map<Entities.MultiValueTimeSeries[]>(data);
-                await _messageBus.Send(MessageBusQueue.RAW_DATA, sourceId, svcData, token);
+                await _messageBus.Send(MessageBusQueue.RAW_DATA_PROCESS, sourceId, svcData, token);
 
                 return Ok(new ApiContracts.WriteResponse
                 {
@@ -112,13 +107,13 @@ namespace TimeSeries.Api.Controllers
             }
             catch (AutoMapperMappingException ex)
             {
-                var errorMessage = "Error occured while trying to map DTO to internal Model.";
+                const string errorMessage = "Error occurred while trying to map DTO to internal Model.";
                 _logger.LogError(errorMessage, ex);
                 return BadRequest(errorMessage);
             }
             catch (Exception ex)
             {
-                var errorMessage = "Error occured while sending message broker.";
+                const string errorMessage = "Error occurred while sending message broker.";
                 _logger.LogError(errorMessage, ex);
                 return StatusCode(500, errorMessage);
             }

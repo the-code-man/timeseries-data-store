@@ -7,11 +7,11 @@ using Internal = TimeSeries.Shared.Contracts.Internal;
 
 namespace TimeSeries.gRPC.Server.Profiles
 {
-    public class DefaultMappingsProfile : Profile
+    public class gRPCServerMappingProfile : Profile
     {
         public override string ProfileName => "DefaultMappings";
 
-        public DefaultMappingsProfile()
+        public gRPCServerMappingProfile()
         {
             // Entities --> Protos
 

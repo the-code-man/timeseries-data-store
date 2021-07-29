@@ -5,12 +5,12 @@ using TimeSeries.Shared.Contracts.Internal;
 
 namespace TimeSeries.ServiceBus.Common
 {
-    public class ProcessedTimeSeriesConsumer : IConsumer<ProcessedTimeSeries>
+    public class RawTimeSeriesConsumer : IConsumer<ProcessedTimeSeries>
     {
-        private readonly ILogger<ProcessedTimeSeriesConsumer> _logger;
+        private readonly ILogger<RawTimeSeriesConsumer> _logger;
         private readonly IDataProcessor<ProcessedTimeSeries> _dataProcessor;
 
-        public ProcessedTimeSeriesConsumer(ILogger<ProcessedTimeSeriesConsumer> logger, IDataProcessor<ProcessedTimeSeries> dataProcessor)
+        public RawTimeSeriesConsumer(ILogger<RawTimeSeriesConsumer> logger, IDataProcessor<ProcessedTimeSeries> dataProcessor)
         {
             _logger = logger;
             _dataProcessor = dataProcessor;
@@ -20,7 +20,7 @@ namespace TimeSeries.ServiceBus.Common
         {
             var data = context.Message;
 
-            _logger.LogInformation($"Received processed data from '{data.SourceId}' source");
+            _logger.LogInformation($"Received raw timeseries data from '{data.SourceId}' source");
 
             return _dataProcessor.Process(data);
         }

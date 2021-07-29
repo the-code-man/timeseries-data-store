@@ -10,7 +10,7 @@ namespace TimeSeries.Api.Modules
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.Register(context => new MapperConfiguration(cfg =>
+            builder.Register(_ => new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile<DefaultMappingsProfile>();
             }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Autofac;
-using Microsoft.Extensions.Hosting;
+﻿using Autofac;
 using TimeSeries.Realtime.DataStream.Hub;
 using TimeSeries.Realtime.DataStream.Hub.Contracts;
 using TimeSeries.Shared.Contracts.DataStream;
@@ -32,7 +26,7 @@ namespace TimeSeries.Realtime.DataStream
                 .InstancePerLifetimeScope();
 
             builder.RegisterType<NotificationService>()
-                .As<IHostedService>()
+                .AsSelf()
                 .SingleInstance();
         }
     }

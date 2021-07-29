@@ -89,7 +89,7 @@ namespace TimeSeries.Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<RealtimeDataHub>($"/realtime");
+                endpoints.MapHub<RealtimeDataHub>("/realtime");
             });
 
             appLifetime.ApplicationStarted.Register(bus.Start);

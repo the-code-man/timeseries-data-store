@@ -1,62 +1,25 @@
-﻿using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Reactive.Linq;
-using System.Threading;
+﻿using MassTransit;
+using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
-using TimeSeries.Shared.Contracts.Api;
 using TimeSeries.Shared.Contracts.DataStream;
-using TimeSeries.Shared.Contracts.Services;
 
 namespace TimeSeries.Realtime.DataStream
 {
-    public class NotificationService : BackgroundService
+    public class NotificationService : IConsumer<RealtimeDataEvent>
     {
         private readonly IRealtimeDataHandler _realtimeDataHandler;
-        private IObservable<long> _tempBus;
+        private readonly ILogger<NotificationService> _logger;
 
-        public NotificationService(IRealtimeDataHandler realtimeDataHandler)
+        public NotificationService(IRealtimeDataHandler realtimeDataHandler,
+            ILogger<NotificationService> logger)
         {
             _realtimeDataHandler = realtimeDataHandler;
+            _logger = logger;
         }
 
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        public Task Consume(ConsumeContext<RealtimeDataEvent> context)
         {
-            _tempBus = Observable.Interval(TimeSpan.FromSeconds(5));
-
-            _tempBus.Subscribe(n =>
-            {
-                var time = DateTime.UtcNow;
-
-                _realtimeDataHandler.Publish(new RealtimeDataEvent
-                {
-                    Source = "FQREW",
-                    AggregationType = AggregationType.Raw,
-                    Data = new MultiValueTimeSeries[]
-                    {
-                        new MultiValueTimeSeries
-                        {
-                            Time = time,
-                            Values = new List<double> { n, n + 1 }
-                        }
-                    }
-                });
-
-                _realtimeDataHandler.Publish(new RealtimeDataEvent
-                {
-                    Source = "FQREW",
-                    AggregationType = AggregationType.Avg,
-                    Data = new MultiValueTimeSeries[]
-                    {
-                        new MultiValueTimeSeries
-                        {
-                            Time = time,
-                            Values = new List<double> { n, n + 1 }
-                        }
-                    }
-                });
-            }, stoppingToken);
-
+            _realtimeDataHandler.Publish(context.Message);
             return Task.CompletedTask;
         }
     }
