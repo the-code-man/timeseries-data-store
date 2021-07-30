@@ -3,7 +3,7 @@ version: "3.9"
 services:
   dataingestor:
     container_name: dataingestor
-    image: codeman8182/timeseries-datastore/data-ingestor
+    image: codeman8182/timeseries-ds-data-ingestor
     build:
       context: .
       dockerfile: src/TimeSeries.DataIngestor/Dockerfile
@@ -21,7 +21,7 @@ services:
 
   avg-calculator:
     container_name: avgcalculator
-    image: codeman8182/timeseries-datastore/avg-calculator
+    image: codeman8182/timeseries-ds-avg-calculator
     build:
       context: .
       dockerfile: src/TimeSeries.Calculator.Avg/Dockerfile
@@ -39,7 +39,7 @@ services:
 
   min-calculator:
     container_name: mincalculator
-    image: codeman8182/timeseries-datastore/min-calculator
+    image: codeman8182/timeseries-ds-min-calculator
     build:
       context: .
       dockerfile: src/TimeSeries.Calculator.Min/Dockerfile
@@ -57,7 +57,7 @@ services:
 
   max-calculator:
     container_name: maxcalculator
-    image: codeman8182/timeseries-datastore/max-calculator
+    image: codeman8182/timeseries-ds-max-calculator
     build:
       context: .
       dockerfile: src/TimeSeries.Calculator.Max/Dockerfile
@@ -74,8 +74,8 @@ services:
       - timeseries-datastore-net
   
   dataggregator-api:
-    container_name: dataggregatorapi
-    image: codeman8182/timeseries-datastore/api
+    container_name: timeseriesapi
+    image: codeman8182/timeseries-ds-api
     build:
       context: .
       dockerfile: src/TimeSeries.Api/Dockerfile
