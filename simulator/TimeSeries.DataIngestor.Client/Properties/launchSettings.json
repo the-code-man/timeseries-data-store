@@ -2,7 +2,7 @@
   "profiles": {
     "DataIngestor.Client": {
       "commandName": "Project",
-      "commandLineArgs": "-a \"https://localhost:5000\" -d \"FQREW\" -b 5 -i 5000"
+      "commandLineArgs": "-a \"https://freeman:8080\" -d \"FQREW\" -b 5 -i 5000"
     }
   }
 }
